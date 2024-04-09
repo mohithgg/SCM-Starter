@@ -8,6 +8,7 @@ export default function HomePage() {
   const [atm, setATM] = useState(undefined);
   const [balance, setBalance] = useState(undefined);
 
+
   const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
   const atmABI = atm_abi.abi;
 
@@ -55,21 +56,25 @@ export default function HomePage() {
 
   const getBalance = async() => {
     if (atm) {
-      setBalance((await atm.getBalance()).toNumber());
+      setBalance((await atm.getDispMssg()).toString());
     }
   }
 
-  const deposit = async() => {
+  const addEmployee = async() => {
     if (atm) {
-      let tx = await atm.deposit(1);
+      let phno = prompt("Enter the employee phone number :");
+      let name=prompt("Enter the employee name");
+      let salary=prompt("Enter the salary");
+      let tx = await atm.addEmployee(phno,name,salary);
       await tx.wait()
       getBalance();
     }
   }
 
-  const withdraw = async() => {
+  const retrieveEmployee = async() => {
     if (atm) {
-      let tx = await atm.withdraw(1);
+      let id = prompt("Enter which employee's name you want to retrieve :");
+      let tx = await atm.retrieveEmployee(id);
       await tx.wait()
       getBalance();
     }
@@ -93,9 +98,9 @@ export default function HomePage() {
     return (
       <div>
         <p>Your Account: {account}</p>
-        <p>Your Balance: {balance}</p>
-        <button onClick={deposit}>Deposit 1 ETH</button>
-        <button onClick={withdraw}>Withdraw 1 ETH</button>
+        <p>display message {balance}</p>
+        <button onClick={addEmployee}>Add Employee</button>
+        <button onClick={retrieveEmployee}>Get Employee Name</button>
       </div>
     )
   }
@@ -104,7 +109,7 @@ export default function HomePage() {
 
   return (
     <main className="container">
-      <header><h1>Welcome to the Metacrafters ATM!</h1></header>
+      <header><h1>Welcome to Employee Management !</h1><p>You can add Employee details and also fetch the details. </p></header>
       {initUser()}
       <style jsx>{`
         .container {
